@@ -1,0 +1,264 @@
+NEconomy = {
+	MIN_CONSTRUCTION_EFFICIENCY = 0.05					# Construction efficiency cannot go below this amount
+
+	# The number of times the initializewealth function is run during setup
+	# The more times you run this the more accurate setup will be for Pop wealth compared to income
+	NUM_TIMES_TO_INITIALIZE_WEALTH = 10
+
+	COUNTRY_GDP_MODIFIER_DIVISOR = 1000					# Scale the country_gdp static modifier by this divisor
+	COUNTRY_GDP_MODIFIER_MAX_MULTIPLIER = 200000		# The country_gdp modifier multiplier cannot be higher than this
+
+	ECONOMY_OF_SCALE_START_LEVEL = 1					# Level at which buildings start getting economy of scale bonuses. Levels lower than this value provide no bonus [>=1]
+	ECONOMY_OF_SCALE_NATIONALIZED_FRACTION_MULT = 0.5	# Non-government building economy of scale modifier if multiplied by (1 - the fraction of nationalized levels * this)
+
+	IN_DEFAULT_MINIMUM_PENALTY_SCALE = 0.1				# This amount of the 'in default' throughput penalty is applied right away
+	IN_DEFAULT_DAYS_TO_FULL_PENALTY = 365				# How many days of being in default does it take to get the full throughput penalty
+	DECLARE_BANKRUPTCY_PENALTY_DURATION_YEARS = 10		# How many years does it take for penalties from declaring bankruptcy to fully decay
+	DECLARE_BANKRUPTCY_RADICALIZATION_BASE_FACTOR = 0.1 # Radicalize this percentage of all pops when declaring bankruptcy
+	DECLARE_BANKRUPTCY_RADICALIZATION_SHARES_FACTOR = 0.05 # For each per-pop shares in their building, radicalize this percentage of a pop on declaring bankruptcy
+
+	FIRED_POP_RADICALIZATION_FRACTION = 0.1				# This percentage of a pop becomes radicalized when they lose their job, for instance due to a building being downsized
+	
+	# When a building is nationalized, pops are radicalized in one of two ways:
+	# 1: Pops that work in the building get radicalized based on number of levels nationalized based on fraction of levels of the building that are self-owned
+	# 2: Pops that own shares in ownership-type building (ie, Manor Houses/Financial Districts) anywhere in the country get radicalized based on number of privately held levels nationalized and the investment score of their building towards the nationalized building type
+	NATIONALIZE_BUILDING_SELF_OWNED_RADICALIZATION_FACTOR = 0.25 		# Multiplied by fraction of self-owned levels
+	NATIONALIZE_BUILDING_PRIVATELY_OWNED_RADICALIZATION_FACTOR = 0.01 	# Multiplied by number of levels owned by another building (clamped to NATIONALIZE_BUILDING_OWNING_POP_TYPE_RADICALIZATION_MAX_MULTIPLIER)
+	NATIONALIZE_BUILDING_PRIVATELY_OWNED_RADICALIZATION_MAX_MULTIPLIER = 20
+	NATIONALIZE_BUILDING_PRIVATELY_OWNED_RADICALIZATION_SCORE_DIVISOR = 1 # Number of radicalized ownership-type pops is multiplied by their building's investment, then divided by this
+	NATIONALIZE_BUILDING_OTHER_COUNTRY_OWNED_RELATIONS_IMPACT = -2 		# Nationalizing a building that is owned by the government of another country results in this relations impact per building level nationalized
+	NATIONALIZE_BUILDING_OTHER_COUNTRY_POP_OWNED_RELATIONS_IMPACT = -1	# Nationalizing a building that is owned by the pops of another country results in this relations impact per building level nationalized		
+	NATIONALIZE_BUILDING_NO_COMPENSATION_IMPACT_MULT = 3.0				# Multiplier to number of radicals & relations hits from nationalization if done without monetary compensation
+	
+	AUTO_DOWNSIZE_BUILDING_PRIVATELY_OWNED_THRESHOLD = 0.5				# At least this fraction of a building's levels must be privately owned for it to be considered for auto-downsizing
+	AUTO_DOWNSIZE_BUILDING_MIN_EMPTY_LEVELS = 2							# A building must be missing at least this many levels of employment (in absolute numbers) to start considering auto-downsizing (both this and the below requirement are applied)
+	AUTO_DOWNSIZE_BUILDING_MIN_EMPTY_FRACTION = 0.2						# A building must be missing at least this many levels of employment (in relative numbers) to start considering auto-downsizing (both this and the above requirement are applied)
+	AUTO_DOWNSIZE_BUILDING_MONTHS_TO_WAIT = 12							# After a building decides to start auto-downsizing, wait this many months before actually starting to downsize, in case conditions change
+	
+	# Pollution Impact = (GeneratedPollution (StateRegion) / (DIVISOR_BASE + DIVISOR_ARABLE_LAND_MULT * SQRT(ArableLand (State Region)))/POLLUTION_MAX
+	POLLUTION_TARGET_DIVISOR_BASE = 50					# Base value to divide total pollution generation by for calculating state region pollution target level
+	POLLUTION_TARGET_DIVISOR_ARABLE_LAND_MULT = 1.5		# Amount per arable land to add to pollution divisor
+	POLLUTION_CHANGE_SPEED = 0.255						# Each day, pollution in state region changes by this amount towards target
+	POLLUTION_MAX = 255
+	POLLUTION_SPREAD_TO_NEIGHBOR = 0.25					# Adjacent state regions always have at least this much of their neighbor's pollution level
+
+	GOODS_LEADERBOARD_SIZE = 10					# How many spots there are on each goods leaderboard
+	MIN_SPOT_PRESTIGE_AWARD = 3					# How many spots on the goods leaderboard get awarded Prestige
+
+	MIN_GOODS_PRICE	= 1							# A good cannot have a lower base price than this
+	PRICE_RANGE = 0.75							# min price of a good is base * (1 - PRICE_RANGE), Max price is base * (1 + PRICE_RANGE), PRICE_RANGE is locked to [0-1]
+	BUY_SELL_DIFF_AT_MAX_FACTOR = 2				# the difference between buy/consumption and sell/production at min/max pricing, e.g. if set to 4 then if buy orders are 4x sell orders price is maxed
+
+	GOODS_SHORTAGE_PENALTY_THRESHOLD = 0.5		# If supply / demand is lower than this, start applying output penalties, by default this should be ( 1 / BUY_SELL_DIFF_AT_MAX_FACTOR )
+	GOODS_SHORTAGE_PENALTY_INCREASE_SPEED = 0.01  	# Goods shortage penalty increases by this fraction of the target each day
+    GOODS_SHORTAGE_PENALTY_DECREASE_SPEED = 0.01  	# Goods shortage penalty goes down by this fraction of GOODS_SHORTAGE_PENALTY_MAX each day
+    GOODS_SHORTAGE_PENALTY_MIN = 0.05			# Goods shortage penalty can't be lower than this if there is any shortage
+	GOODS_SHORTAGE_PENALTY_MAX = 0.5			# Goods shortage penalty can't be higher than this
+
+	POP_NEED_BASIC_FOOD = "popneed_basic_food"
+
+	# If the delta between a historical trade route's level and its predicted level after gamestate init is at least this, print a debug log entry
+	TRADE_ROUTE_HISTORICAL_LEVEL_DIFF_WARNING = 2
+
+	TRADE_ROUTE_BUREAUCRACY_COST = 10					# The cost in BUR per trade route
+	TRADE_ROUTE_START_LEVEL = 1							# All new trade routes start at this level
+	TRADE_ROUTE_MAX_LEVEL = 999							# Trade routes cannot be higher level than this
+	TRADE_ROUTE_MIN_TOTAL_IMPORTS = 10					# This amount of a good can always be imported to a market even if there is no demand
+	TRADE_ROUTE_DEFAULT_GOODS_QUANTITY = 5				# Base quantity traded from trade routes, if not otherwise specified in goods type
+	TRADE_ROUTE_ECONOMY_OF_SCALE = 0.25					# Each level of trade route after the first adds this % to desired trade quantity
+	TRADE_ROUTE_ECONOMY_OF_SCALE_MAX_LEVEL = 100			# After this level, trade route economy of scale no longer increases the amount per level
+	TRADE_ROUTE_REQUIRED_CONVOY_BUFFER = 0.05			# Trade routes may not increase level if you wouldn't end up with at least this 'buffer' of produced convoys
+
+	TRADE_ROUTE_USE_AVERAGE_PRE_AND_POST_TRADE_PRICES = no			# Whether trade routes should use an average of pre and post-trade prices or just market prices (0 = market prices, 1 = pre/post trade prices)
+
+	TRADE_ROUTE_AUTO_INCREASE_EMPLOYMENT_THRESHOLD = 0.9 	# If trade route has this much of its max staffing level employed, it can automatically increase its level
+	TRADE_ROUTE_AUTO_INCREASE_ACCEPTABLE_REVENUE_DIFFERENCE = 1.1 # Multiply revenue of new trade route level by this for the purpose of considering whether it's OK to auto-increase level (means that trade routes can level up even when slightly decreasing overall revenue)
+	TRADE_ROUTE_AUTO_INCREASE_VERY_LOW_PRODUCTIVITY_THRESHOLD = 3 # If trade route's productivity is below this, always automatically decrease its level (regardless of total revenue)
+	TRADE_ROUTE_AUTO_INCREASE_LOW_PRODUCTIVITY_THRESHOLD = 6 # If trade route's productivity would drop below this, don't automatically increase its level (regardless of total revenue)
+	TRADE_ROUTE_AUTO_INCREASE_HIGH_PRODUCTIVITY_THRESHOLD = 10 # If trade route's productivity is above this, it's always fine to automatically increase its level (regardless of total revenue)
+	TRADE_ROUTE_AUTO_REDUCTION_EMPLOYMENT_THRESHOLD = 0.75 	# If trade route has less than this of its max staffing level employed and could not hire anyone last week, it can automatically decrease its level
+	TRADE_ROUTE_AUTO_REDUCTION_ACCEPTABLE_REVENUE_DIFFERENCE = 1.15 # Multiply revenue of current trade route level by this for the purpose of considering whether we should auto-decrease level (means that trade routes won't level down just for the purpose of a small revenue increase)
+
+	TRADE_CENTER_BASE_NUM_LEVELS_PER_TRADE_ROUTE = 1 # Each distinct trade route generates this number of Trade Center levels to manage it
+	TRADE_CENTER_NUM_LEVELS_PER_TRADE_ROUTE_LEVEL = 1 # Each level of a trade route generates this number of Trade Center levels to manage it
+	TRADE_CENTER_MIN_AVAILABLE_WORKFORCE = 20000 # Don't put new trade centers in places with less available workforce than this
+	TRADE_CENTER_TRADE_ROUTE_STATE_FACTOR = 4	# When deciding trade center for a trade route, increase score by this if the state is the exit/entry port for the trade route
+	TRADE_CENTER_TRADE_ROUTE_STATE_NEIGHBOR_FACTOR = 2	# When deciding trade center for a trade route, increase score by this if the state neighboring the exit/entry port for the trade route
+	TRADE_CENTER_TREATY_PORT_FACTOR = 15 	# When deciding trade center for a trade route, increase score by this for treaty port in the remote market
+	TRADE_CENTER_MARKET_CAPITAL_FACTOR = 5 	# When deciding trade center for a trade route, increase score by this for the market capital in the market
+	TRADE_CENTER_PORT_LEVEL_FACTOR = 1 	# When deciding trade center for a trade route, multiply port level by this and add to the score
+	TRADE_CENTER_EXISTING_TRADE_ROUTES_FACTOR = -1  # When deciding trade center for a trade route, multiply the number of trade routes already associated with the state by this score
+
+	COMPETITIVENESS_PER_TRADE_ROUTE = 100		# Base competitiveness for a trade route
+	COMPETITIVENESS_DOMESTIC_TRADE_MULT = 0.5	# Competiveness is multiplied by ( 1 + this ) if trading country and market controller are the same country
+	COMPETITIVENESS_TRADE_AGREEMENT_MULT = 0.5	# Competiveness is multiplied by ( 1 + this ) if trading country and market controller have a trade agreement
+	COMPETITIVENESS_FROM_ROUTE_DURATION = 2.0   # Competiveness is multiplied by ( 1 + this ) if the trade route has been around for COMPETITIVENESS_DURATION_MAX_MONTHS (scales linearly towards this value at fewer months)
+	COMPETITIVENESS_DURATION_BONUS_MAX_MONTHS = 120   # The age at which a trade route receives the maximum bonus to competetiveness
+
+	MARKET_SHARE_FROM_GDP = 1.0					# Get this many points of market share per pound of GDP in states
+	MARKET_SHARE_MARKET_CONTROLLER_FACTOR = 1.33	# Market controller's market points count for this much more
+	MARKET_SHARE_MARKET_ACCESS_BASE = 0.5		# How much of market points is always gained regardless of market access
+	MARKET_SHARE_MARKET_ACCESS_SCALED = 0.5		# How much of market points is gained based on market access
+
+	COUNTRY_MIN_CREDIT_BASE = 100000			# Added to the total Building Cash Reserves to determine credit limit (base)
+	COUNTRY_MIN_CREDIT_SCALED = 0.5 			# Added to the total Building Cash Reserves to determine credit limit (multiplied by GDP)
+	CREDIT_RATIO_MAX_OVERRUN = 0.01 			# Countries can accumulate this percentage more of a debt "hole" than their credit limit when in default
+	GOLD_RESERVE_RATIO_AT_START = 0.5			# Unless a country history's 'treasury' parameter is set to a non-zero value, countries start with this ratio of their gold reserve in gold
+	BUILDING_INITIAL_WAGE_WEEKS = 2				# A building will not adjust its wages for the first this many weeks of its existence
+	MAX_WAGE_STEP_CHANGE = 0.1					# Wage rates can change at most this much each week
+	SUBSIDIES_MIN_GAIN = 0						# If a building is subsidized, it will always collect enough subsidies to ensure at least this weekly cash reserve growth
+	DEFAULT_MIN_HIRING_RATE = 0.01 				# Default weekly min hiring limit applied in a building per profession as a ratio of full employment
+	DEFAULT_MAX_HIRING_RATE = 0.1 				# Default weekly max hiring limit applied in a building per profession as a ratio of full employment
+	HIRING_RANGE_WEEKLY_CHANGE = 0.01 			# Weekly hiring range of a building is decreased or increased by this based on whether it is failing to hire at its current rate or not
+	EMPLOYMENT_PROPORTIONALITY_LIMIT = 0.1		# A building cannot have a difference of ratio of full employment between any two professions greater than this limit
+	MINIMUM_EMPLOYEES = 10						# If a building has fewer employees than this, it will always attempt to hire
+	BUILDING_RAISE_WAGES_DIVIDEND_INCOME_FACTOR = 0.5 # A pop with dividend income has its wealth multiplied by 1 - ( the fraction of their income that is dividends * this ) to ensure buildings don't start wage dumping just because all employees are getting dividends
+	BUILDING_RAISE_WAGES_MIN_RELEVANT_POP_SIZE = 50 # Pops with less workforce than this are ignored when checking whether a profitable building should raise wages because of radicalizing workers
+	BUILDING_RAISE_WAGES_DISCRIMINATION_FACTOR = 0.66 # Profitable buildings only care to raise wages for discriminated pops if their wealth to expected SoL ratio is less than this
+	BUILDING_LOWER_WAGES_TARGET_WEALTH_MULT = 1.2 # Buildings will consider lowering wages if all significant pops working in them have this * the target wealth to expected SoL ratio
+	BUILDING_PREFER_LAYOFFS_TARGET_WEALTH_MULT = 0.5 # Buildings will prefer laying off pops if any significant pops working in them have this * the target wealth to expected SoL ratio or below
+	BUILDING_DEFAULT_MIN_EARNINGS_TO_HIRE_EMPLOYEES = 3  # Non-subsidized buildings will not hire if it would result in their annual earnings/employee falling below this threshold (default value, can be overridden for building group)
+	BUILDING_PROFIT_TARGET_TO_RAISE_WAGES = 0.25	# Required profit margin to consider raising wages for SoL or employment reasons, with BUILDING_WEEKS_BETWEEN_PAY_CHANGES weeks cooldown
+	BUILDING_PROFIT_TARGET_TO_LOWER_WAGES = 0.15	# If profit margin is this or below, buildings should lower their wages, with BUILDING_WEEKS_BETWEEN_PAY_CHANGES weeks cooldown
+	BUILDING_PROFIT_TARGET_TO_WITHDRAW_CASH = 0.15	# If profit margin is this or below, buildings should withdraw money from the cash reserves to make up the difference
+	BUILDING_PROFIT_TARGET_TO_HIRE_EMPLOYEES = 0.25	# If profit margin is this or above, buildings should try to hire new workers
+	OWNERSHIP_BUILDING_PROFIT_TARGET_TO_RAISE_WAGES = 0.5	# Overrides BUILDING_PROFIT_TARGET_TO_RAISE_WAGES for buildings that own other buildings
+	OWNERSHIP_BUILDING_PROFIT_TARGET_TO_LOWER_WAGES = 0.3	# Overrides BUILDING_PROFIT_TARGET_TO_LOWER_WAGES for buildings that own other buildings
+	OWNERSHIP_BUILDING_PROFIT_TARGET_TO_WITHDRAW_CASH = 0.3	# Overrides BUILDING_PROFIT_TARGET_TO_WITHDRAW_CASH for buildings that own other buildings
+	OWNERSHIP_BUILDING_PROFIT_TARGET_TO_HIRE_EMPLOYEES = 0.5 # Overrides BUILDING_PROFIT_TARGET_TO_HIRE_EMPLOYEES for buildings that own other buildings
+	SUBSISTENCE_BUILDING_PROFIT_TARGET_TO_RAISE_WAGES = 0.7	# Overrides BUILDING_PROFIT_TARGET_TO_RAISE_WAGES for subsistence buildings
+	SUBSISTENCE_BUILDING_PROFIT_TARGET_TO_LOWER_WAGES = 0.5	# Overrides BUILDING_PROFIT_TARGET_TO_LOWER_WAGES for subsistence buildings
+	SUBSISTENCE_BUILDING_PROFIT_TARGET_TO_WITHDRAW_CASH = 0.5	# Overrides BUILDING_PROFIT_TARGET_TO_WITHDRAW_CASH for subsistence buildings
+	BUILDING_MAX_EMPLOYMENT_FRACTION_TO_RAISE_WAGES = 0.5 # If the employment fraction of a building is above this, don't raise wages just to try and snipe employees from other buildings
+	BUILDING_WEEKS_BETWEEN_PAY_CHANGES = 0		# Cooldown between changes in pay, so buildings don't overcompensate for a temporary change in circumstances. If the building is unprofitable it uses BUILDING_WEEKS_BETWEEN_PAY_CHANGES_WHEN_UNPROFITABLE instead.
+	BUILDING_WEEKS_BETWEEN_PAY_CHANGES_WHEN_UNPROFITABLE = 0 # Cooldown between changes in pay, so buildings don't overcompensate for a temporary change in circumstances. Only used when unprofitable.
+	MIN_RAISE_TO_HIRE = 0.10					# The minimum required increase in wages for an employee to switch jobs (1.0 = +100% = x2)
+	BASE_RESOURCE_DISCOVER_CHANCE = 0.02 		# Per day (1.0 = 1%)
+	EMPLOYMENT_RESOURCE_DEPLETE_CHANCE = 0.005	# Multiplied by number of fully employed levels of the building
+	RESOURCE_DISCOVER_MIN_FRACTION = 0.2		# Min fraction of resources that will be discovered for each successful roll
+	RESOURCE_DISCOVER_MAX_FRACTION = 0.5		# Max fraction of resources that will be discovered for each successful roll
+	FULLY_DISCOVERED_RESOURCE_DEPLETE_CHANCE_MULT = 1.0 # The chance of a resource depleting is multiplied by this when all of the resource has been discovered
+	RESOURCE_DEPLETE_MIN_AMOUNT = 2				# Min amount of resources that will be depleted for each successful roll
+	RESOURCE_DEPLETE_MAX_AMOUNT = 5				# Max amount of resources that will be depleted for each successful roll
+	QUALITY_OF_LIFE_MIN = 1
+	QUALITY_OF_LIFE_MAX = 100
+	SUBSISTENCE_OUTPUT_AVERAGE_WAGE_RATE_FACTOR = 150   # Each 1.0 of subsistence output counts as this much wage rate when setting normal wages
+	PEASANT_STARTING_WAGE_RATE_FACTOR = 1.0		# For the sake of calculating starting normal wages, treat peasants as having this pop type wage multiplier
+	STARTING_WAGE_RATE_MULTIPLIER = 1.0			# Starting wage rate is multiplied by this (for easy balancing)
+	STARTING_WAGE_RATE_SUBSISTENCE_MULTIPLIER = 0.5		# STARTING_WAGE_RATE_MULTIPLIER is further multiplied by this for subsistence buildings
+	NORMAL_WAGE_RATE_FALLBACK = 500.0			# If it's impossible to compute a normal wage rate (e.g. if every incorporated pop works in government buildings) set it to this (weekly £ per POP_SIZE_PACKAGE employees)
+	MINIMUM_WAGE_RATE = 10.0					# The wage rate can never drop below this, no matter what (weekly £ per POP_SIZE_PACKAGE employees)
+	MAXIMUM_WAGE_RATE = 100000.0				# The absolute maximum that a building's wage rate can be increased to.
+	CREDIT_RATIO_HEALTH_THRESHOLD = 0.5			# If the principal is smaller than this ratio of the total credit, the economy is considered to be healthy
+	GOLD_RESERVE_MIN = 1000						# If Gold Reserves are computed to be lower than this, it's instead set to this
+	GOLD_RESERVE_LIMIT_FACTOR = 0.2				# The base factor of annual GDP that should be provided as a Gold Reserve
+	GOLD_RESERVE_RETURNS_FACTOR = 1				# How rapidly diminishing returns will cause gold reserves to drop off after the limit has been reached (higher value increases penalty)
+	RETOOLING_WEEKS = 0							# How long it takes for a building to get back up to full production after switching a production method
+	BUILDING_TIMED_MODIFIER_WEEKS = 52 			# Duration of a timed modifier which is applied after switching a production method
+
+	BUILDING_PAUSE_HIRES_CASH_RESERVES_THRESHOLD = 0.75 	# If cash reserves are higher than this, and employment fraction is below BUILDING_MAX_EMPLOYMENT_FRACTION_TO_CONSIDER_CASH_RESERVES, then allow hiring even if profits are low
+	BUILDING_MIN_EMPLOYMENT_FRACTION_TO_PAUSE_HIRES = 0.1 	# If building has at least this employment, it's OK to pause hiring
+	BUILDING_MAX_EMPLOYMENT_FRACTION_TO_CONSIDER_CASH_RESERVES = 0.5 	# If a building has at least this employment fraction, then ignore the cash reserves override for hiring
+	BUILDING_MAX_PROFIT_TO_PAUSE_HIRES = 0.2				# If building is making less than this fraction of revenue in profit, it's OK to pause hiring
+
+	PRICE_REPORT_MAX_ENTRIES = 10
+
+	NUM_COIN_ICONS = 13
+	COIN_ICON_PRICE_COMPARISON_STEP = 0.12
+
+	NUM_PROFITABILITY_ICONS = 13
+	PROFITABILITY_ICON_COMPARISON_STEP = 0.15
+
+	EARNINGS_RATIO_HIGH_THRESHOLD = 1.5			# Buildings whose productivity exceeds this factor of the average will be considered high-productivity buildings
+	EARNINGS_RATIO_LOW_THRESHOLD = 0.66			# Buildings whose productivity is below this factor of the average will be considered low-productivity buildings
+	EARNINGS_ABSOLUTE_HIGH_THRESHOLD = 30		# Buildings whose productivity exceeds this amount will ALWAYS be considered high-productivity buildings
+	EARNINGS_ABSOLUTE_LOW_THRESHOLD = 3			# Buildings whose productivity is below this amount will ALWAYS be considered low-productivity buildings
+
+	SLAVE_BASKET_DEFAULT = 8					# Default level of consumer goods that a building will buy for its slaves
+	SLAVE_BASKET_MIN = 1						# Min level of consumer goods that a building will buy for its slaves (the highest of this and SLAVE_BASKET_SCALED_MIN is used)
+	SLAVE_BASKET_MAX = 12						# Max level of consumer goods that a building will buy for its slaves (the lowest of this and SLAVE_BASKET_SCALED_MAX is used)
+	SLAVE_BASKET_SCALED_MIN = 0.5				# Multiplied by lowest non-slave wealth in the building
+	SLAVE_BASKET_SCALED_MAX = 1					# Multiplied by lowest non-slave wealth in the building
+	SLAVE_BASKET_SUBSISTENCE_GOODS_MULT = 0.05 	# Goods consumed for slaves in subsistence buildings are multiplied by this
+
+	DEBT_SLAVERY_ENSLAVEMENT_RATE = 0.005		# Under debt slavery up to this much of a state's populace can be enslaved for their debts each week
+	DEBT_SLAVERY_ENSLAVEMENT_RATE_PER_POP = 0.1 # No more than this fraction of a single pop can be enslaved each week
+	DEBT_SLAVERY_ENSLAVEMENT_RATE_DROP_OFF_PER_WEALTH = 0.01 # Each point of wealth reduces max enslavement rate on a pop by this
+	DEBT_SLAVERY_MAX_STATE_SLAVE_FRACTION = 0.15 # If more than this % of a state's population are slaves, do not enslave any more pops under debt slavery
+
+	SLAVE_TRADE_MIN_VACANCIES_NEEDED_TO_IMPORT = 500 # There needs to be at least this many (non-subsistence) vacancies in buildings that can be filled by slaves in order for slave import to happen
+	SLAVE_TRADE_MIN_POPULATION_TO_EXPORT = 100000	 # There needs to be at least this many people in the state in order for it to be selected, or remain valid, as a slave import target
+	SLAVE_TRADE_FULL_EXPORT_POPULATION_THRESHOLD = 250000	 # Below this amount of state population, the number of slaves exported is reduced by a multiplier scaled against SLAVE_TRADE_MIN_POPULATION_TO_EXPORT (at the halfway point between the two numbers the multiplier is 0.5x, etc)
+	SLAVE_TRADE_POPULATION_FRACTION_WEIGHT = 100	 # Weight of slave population ratio in slave import marker selection
+	SLAVE_TRADE_POPULATION_TOTAL_WEIGHT = 0.0002	 # Weight of total population in slave import marker selection
+	SLAVE_TRADE_TURMOIL_WEIGHT = 25				# Weight of slave turmoil in slave import marker selection
+	SLAVE_TRADE_DISTANCE_WEIGHT = 1				# Inverse weight (penalty) for distance in slave import marker selection
+	SLAVE_TRADE_OTHER_STATES_WEIGHT = 2			# Inverse weight (penalty) for having other slave import markers
+	SLAVE_TRADE_EXISTING_STATE_CULTURE_WEIGHT_MULT = 10 # Total score of state is multiplied by this if importing from states whose homeland cultures are already present in this state
+	SLAVE_TRADE_NUMBER_EVALUATED_STATES = 10	# Slave import marker is selected randomly from this many potential targets with highest weight
+	SLAVE_TRADE_BASE_SLAVES_PER_WEEK = 100		# Base number of slaves that will be traded per marker per week
+	SLAVE_TRADE_ARABLE_LAND_EFFECT = 1			# Slaves traded per week is increased by this for each arable land in the importing state
+	SLAVE_TRADE_ARABLE_LAND_EFFECT_MAX = 200	# Maximum that arable land can increase slaves traded per week
+	SLAVE_TRADE_RANDOM_MIN = 0.5				# Slaves traded per week is multiplied by a random number, minimum of this
+	SLAVE_TRADE_RANDOM_MAX = 1.5				# Slaves traded per week is multiplied by a random number, maximum of this
+	SLAVE_TRADE_MIN_MARKET_ACCESS = 0.1			# Minimum market access multiplier for slave trade, i.e. even at a marker with 0 market access, this fraction of the base number will be traded
+
+	BUILDING_FAILED_HIRE_COOLDOWN_WEEKS_WITHOUT_WAGE_RAISE = 4		# If a building fails to hire, it waits this many weeks before trying again *unless* it has since raised wages or adjusted its hiring rate
+
+	BUILDING_LAYOFFS_DECREASE_BY = 0.05				# The ratio that layoffs will reduce employment by (e.g. 0.15 means if you're currently 57% employed, reduce that to 48.45%)
+	BUILDING_LAYOFF_HIRING_COOLDOWN_WEEKS = 4		# If a building does layoffs, don't hire anymore workers for at least this amount of weeks 
+	BUILDING_MINIMUM_HIRING_ADJUSTMENT_FRACTION = 0.001		# If a hiring or firing wouldn't result in at least this amount of the wanted employees being transfered, don't bother
+	
+	BUILDING_CASH_RESERVES_HIGH_ROI = 0.4			# A ROI (return on investment) at or above this value is considered "high". In this context ROI means how much more money a building makes compared to how much it spends. Must be >= BUILDING_CASH_RESERVES_MED_ROI.
+	BUILDING_CASH_RESERVES_MED_ROI = 0.25			# A ROI (return on investment) at exactly this value is considered "medium". In this context ROI means how much more money a building makes compared to how much it spends. Must be >= BUILDING_CASH_RESERVES_LOW_ROI.
+	BUILDING_CASH_RESERVES_LOW_ROI = 0.15			# A ROI (return on investment) at or below this value is considered "low". In this context ROI means how much more money a building makes compared to how much it spends. Must be > 0.
+
+	BUILDING_CASH_RESERVES_FILL_TIME_HIGH_ROI = 26	# Base number of weeks to fill a building's cash reserves when ROI is high. Final number of weeks is directly interpolated if ROI is between medium and high. Must be > 0.
+	BUILDING_CASH_RESERVES_FILL_TIME_MED_ROI = 52	# Base number of weeks to fill a building's cash reserves when ROI is medium. Must be > 0.
+	BUILDING_CASH_RESERVES_FILL_TIME_LOW_ROI = 78	# Base number of weeks to fill a building's cash reserves when ROI is low. Final number of weeks is directly interpolated if ROI is between low and medium. Must be > 0.
+
+	BUILDING_CASH_RESERVES_MIN_DEPOSIT_PERCENT = 0.15	# The minimum percentage of weekly profits that building owners will try to deposit into a building's cash reserves. Must be >= 0.
+	BUILDING_CASH_RESERVES_MAX_DEPOSIT_PERCENT = 0.40	# The maximum percentace of weekly profits that building owners will try to deposit into a building's cash reserves. Must be >= BUILDING_CASH_RESERVES_MIN_DEPOSIT_PERCENT
+	OWNERSHIP_BUILDING_CASH_RESERVES_MIN_DEPOSIT_PERCENT = 0.125 # Replaces BUILDING_CASH_RESERVES_MIN_DEPOSIT_PERCENT for buildings that own other buildings
+	OWNERSHIP_BUILDING_CASH_RESERVES_MAX_DEPOSIT_PERCENT = 0.25	# Replaces BUILDING_CASH_RESERVES_MAX_DEPOSIT_PERCENT for buildings that own other buildings
+
+	BUILDING_HIGH_CASH_RESERVES_THRESHOLD = 0.5	# If cash reserves are above this fraction of max, buildings won't try to reduce expenses even if they are losing money
+
+	EMPLOYMENT_DIVIDEND_ESTIMATE_MULT = 2.0			# When deciding employment overestimate dividends since they vary a lot and we really dont want to move someone to a job without a dividend that then turns out worse
+
+	SHIPPING_LANE_CONVOY_COST_SCALING = 0.1			# The cost for a shipping lane for each node beyond the first. So at 0.1 it goes 1.0, 1.1, 1.2 and so on.
+	GOODS_DEFAULT_CONVOY_COST_MULTIPLIER = 1			# The convoy cost of shipping a single unit of goods (can be overriden in defines)
+	OVERSEAS_INFRASTRUCTURE_CONVOY_COST_MULTIPLIER = 2	# Convoy cost for each infrastructure usage in overseas state for port connection shipping lanes
+
+	CUSTOMS_UNION_CONTROLLER_MINIMUM_TARIFFS_SPLIT = 0.25	# Minimum amount of tariffs that the senior partner of a customs union gets. The rest will be split among the junior partners, according to their GDP contribution (between 0 and 1)
+
+	REINVESTMENT_EFFICIENCY_MAX = 3.0					# Maximum conversion of reinvestment to investment pool
+	REINVESTMENT_BASE_EFFICIENCY_THRESHOLD = 50000000	# Below this amount of GDP, increase reinvestment multiplier on a linear scale up to REINVESTMENT_EFFICIENCY_MAX at 0
+	REINVESTMENT_SUBSISTENCE_FRACTION_REDUCTION = 0.5	# Reinvestment from pops in ownership buildings is multiplied by ( 1 - this * the share of levels owned that are subsistence buildings )
+
+	COMPANY_OVER_LIMIT_BONUS_PENALTY_MIN = 0.33			# If the number of companies in the country exceeds the limit, all company bonuses get penalty. The penalty is scaled proportionally to the limit (exceeding the limit by 100% reduces bonuses by 100%) and the minimum value is this
+	COMPANY_PRODUCTIVITY_RATIO_HIGH_THRESHOLD = 1.25	# Companies whose productivity exceeds this factor of the global average will be considered high-productivity companies
+	COMPANY_PRODUCTIVITY_RATIO_LOW_THRESHOLD = 0.75		# Companies whose productivity is below this factor of the global average will be considered low-productivity companies
+	COMPANY_PRODUCTIVITY_ABSOLUTE_HIGH_THRESHOLD = 25	# Companies whose productivity exceeds this amount will ALWAYS be considered high-productivity companies
+	COMPANY_PRODUCTIVITY_ABSOLUTE_LOW_THRESHOLD = 5		# Companies whose productivity is below this amount will ALWAYS be considered low-productivity companies
+	COMPANY_PROSPERITY_MAX = 200						# Company prosperity cannot be higher than this
+	COMPANY_PROSPERITY_BONUS_THRESHOLD = 100			# At this amount of prosperity, a company will start providing its prosperity bonus modifier
+	COMPANY_PROSPERITY_WEEKLY_INCREASE = 5				# High-productivity companies have their prosperity increase by this amount per week
+	COMPANY_PROSPERITY_WEEKLY_DECREASE = 5				# Low-productivity companies have their prosperity increase by this amount per week
+	NATIONALIZATION_PER_LEVEL_COST = 500				# How much it costs to nationalize one level of a building per construction point
+	PRIVATIZATION_PER_LEVEL_COST = 250					# How much it costs to privatize one level of a building per construction point
+	MIN_FAKE_CONSTRUCTION_COST = 100					# Min construction cost for the matters of nationalization and privatization
+
+	COMPANY_INITIAL_LEVELS = 5							# How many levels of ownership in other buildings required to establish a company
+	COMPANY_ON_ESTABLISH_COOLDOWN_MONTHS = 60			# Cooldown in months after establishing a company before you can disband it
+	COMPANY_ON_DISBAND_COOLDOWN_MONTHS = 48				# Cooldown in months after disbanding a company before you can re-establish it
+	COMPANY_MIN_LEVELS_OWNED = 5							# Min amount of ownerships that company can have, more can't be nationalized or privatized
+
+	BUILDING_LEVEL_BUREAUCRACY_COST = 1					# Cost of owning one level of the goverment building
+	COLLECTIVIZATION_DEBT_RATIO = 0.5					# Ratio of the country max debt can be used for collectivizing
+	MIN_COLLECTIVIZATION_BUDGET = 1000000				# Min size of a collectivizing budget
+
+	# Currently only used in loc, not logic
+	HARVEST_CONDITION_MIN_INTENSITY = 0.0					# Lowest intensity value a harvest condition can roll ( 0 <= this < max)
+	HARVEST_CONDITION_MAX_INTENSITY = 9.0					# Highest intensity value a harvest condition can roll (min < this)
+}
