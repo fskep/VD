@@ -1,0 +1,72 @@
+namespace = Liberia_modernize
+
+#시작이벤트
+Liberia_modernize.1 = {
+    type = country_event
+	placement = root
+	title = Liberia_modernize.1.t
+	desc = Liberia_modernize.1.d
+	flavor = Liberia_modernize.1.f
+	
+	duration = 3
+	
+	event_image = {
+		video = "unspecific_factory_closed"
+	}
+	
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+	
+	trigger = {
+	}
+	
+	immediate = {
+		set_variable = {
+			name = Liberia_modernize_var
+			value = 0
+		}
+		add_journal_entry = {
+			type = je_Liberia_modernize_main
+		}
+	}
+	
+	option = {
+	    name = Liberia_modernize.1.a
+		add_journal_entry = {
+			type = je_Liberia_modernize_education
+		}
+		add_journal_entry = {
+			type = je_Liberia_modernize_administration
+		}
+		add_journal_entry = {
+			type = je_Liberia_modernize_military
+		}
+		add_journal_entry = {
+			type = je_Liberia_modernize_diplo
+		}
+		add_journal_entry = {
+			type = je_Liberia_modernize_Local_support
+		}
+		add_journal_entry = {
+			type = je_Liberia_modernize_economy
+		}
+	}	
+}
+
+#성공이벤트
+Liberia_modernize.2 = {
+    type = country_event
+	placement = root
+	title = Liberia_modernize.2.t
+	desc = Liberia_modernize.2.desc
+	flavor = Liberia_modernize.2.f
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	duration = 3
+
+	event_image = {
+		video = "europenorthamerica_london_center"
+	}
+}
+
+#실패이벤트
